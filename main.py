@@ -25,6 +25,10 @@ def today_timeTable(message):
 @token.message_handler(commands=['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'])
 def timeTable(message):
     mess=''
+    if len(message.text[1:]) > 9:
+        list = message.text.split('@')
+        message.text = list[0]
+
     for i in range(1, len(get_user_lessons(message.text[1:].title()))):
         if not get_user_lessons(message.text[1:].title())[i]:
             break

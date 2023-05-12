@@ -14,6 +14,9 @@ def get_user_lessons(day: str):
     if day == 'Thursday': res = db.execute("""SELECT * FROM Thursday WHERE class = ?""", (user_class, ))
     if day == 'Friday': res = db.execute("""SELECT * FROM Friday WHERE class = ?""", (user_class, ))
     if day == 'Saturday': res = db.execute("""SELECT * FROM Saturday WHERE class = ?""", (user_class, ))
+    if not res:
+        return 'Неверная команда'
+    
     lessons = res.fetchone()
     
     if lessons is None:
