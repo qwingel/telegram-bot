@@ -1,0 +1,14 @@
+[Unit]
+Description=Telegram Bot
+After=network.target
+
+[Service]
+User=qwingel
+Group=qwingel
+
+WorkingDirectory=/home/qwingel/telegram-bot/
+Environment="PYTHONPATH=/home/qwingel/telegram-bot/"
+ExecStart=/home/qwingel/telegram-bot/.venv/bin/python /home/qwingel/telegram-bot/main.py
+
+[Install]
+WantedBy=multi-user.target
