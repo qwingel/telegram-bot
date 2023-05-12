@@ -1,6 +1,5 @@
 import sqlite3
-import calendar
-from datetime import date
+# from datetime import time
 
 db = sqlite3.connect('database.db', 10.0, check_same_thread=False)
 
@@ -23,3 +22,7 @@ def get_user_lessons(day: str):
         return None
     
     return lessons
+
+# def save_ids( username: str, id: int):
+#     db.execute("""INSERT INTO saved_ids (id, username, saved_id) VALUES (1, ?, ?);""", 
+#               ( username, id, ))
