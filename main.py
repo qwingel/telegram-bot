@@ -2,6 +2,7 @@ import telebot
 import calendar
 import time
 from multiprocessing import *
+from random import randint
 from database import get_user_lessons
 #from database import save_ids
 from datetime import date
@@ -10,8 +11,11 @@ from datetime import time
 bot = telebot.TeleBot('6232931993:AAG-fax5xiFD0HSiNn59S2C8Z1pSr9hGLx0')
 
 isVoting = False
+chat_usernames = ['klushka66', 'girlsarethesame', 'nxmrx3sxrrxvv', 'Klnr099', 'dasha_chernykh0',
+                   'AAKotelmakh', 'imready2die', 'sonechko_Q', 'alexqqe', 'thevosim', 'huevei']
 
-user_count = 0
+ids = ['' for i in range(30)]
+chat_id = '-1001860613804'
 
 thisDate = str(date.today()).split('-')
 today = int(calendar.weekday(int(thisDate[0]), int(thisDate[1]), int(thisDate[2])))
@@ -25,12 +29,15 @@ muted = ['' for i in range(30)]
 @bot.message_handler(commands=['today'])
 def today_timeTable(message):
     mess = '' 
-    for i in range(1, len(get_user_lessons(dayOfWeek[today]))):
-        if not get_user_lessons(dayOfWeek[today])[i]:
-            break
-        mess += '-' + get_user_lessons(dayOfWeek[today])[i] + '\n'
-    print(message.chat.id)
-    bot.send_message(message.chat.id, f'<b>[{rus_dayOfWeek[today]}]</b> \n\n' + mess + f'\n<b>[{rus_dayOfWeek[today]}]</b>', parse_mode='html')
+    if today == 6:
+        bot.send_message(chat_id, 'Отдохни, крошка =3')
+    else:
+        for i in range(1, len(get_user_lessons(dayOfWeek[today]))):
+            if not get_user_lessons(dayOfWeek[today])[i]:
+                break
+            mess += '-' + get_user_lessons(dayOfWeek[today])[i] + '\n'
+        print(chat_id)
+        bot.send_message(chat_id, f'<b>[{rus_dayOfWeek[today]}]</b> \n\n' + mess + f'\n<b>[{rus_dayOfWeek[today]}]</b>', parse_mode='html')
 
 @bot.message_handler(commands=['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'])
 def timeTable(message):
@@ -43,52 +50,63 @@ def timeTable(message):
         if not get_user_lessons(message.text[1:].title())[i]:
             break
         mess += '-' + get_user_lessons(message.text[1:].title())[i] + '\n'
-    bot.send_message(message.chat.id, f'<b>[{rus_dayOfWeek[dayOfWeek.index(message.text[1:].title())]}]</b> \n\n' + mess + f'\n<b>[{rus_dayOfWeek[dayOfWeek.index(message.text[1:].title())]}]</b>', parse_mode='html')
+    bot.send_message(chat_id, f'<b>[{rus_dayOfWeek[dayOfWeek.index(message.text[1:].title())]}]</b> \n\n' + mess + f'\n<b>[{rus_dayOfWeek[dayOfWeek.index(message.text[1:].title())]}]</b>', parse_mode='html')
 
 @bot.message_handler(commands=['mute', 'unmute', 'clear', 'mutelist'])
 def mute_handler(message):
     list = message.text[1:].split()
     cmd = list[0]
-    if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'member' and message.from_user.username != 'girlsarethesame':
-        if cmd == 'mutelist':
-            mute_list(message.chat.id)
-        else:
-            bot.send_message(message.chat.id, 'Недостаточно прав')
-    else:
-        if(len(list) < 2):
-            if cmd != 'clear' and cmd != 'mutelist':
-                bot.send_message(message.chat.id, f'Впишите имя пользователя\nExample: /mute @{message.from_user.username}')
-            elif cmd == 'clear':
-                clear_mute(message.chat.id)
+    
+    if not isUserMuted(message.from_user.username):
+        if bot.get_chat_member(chat_id, message.from_user.id).status == 'member' and message.from_user.username != 'girlsarethesame':
+            if cmd == 'mutelist':
+                mute_list(chat_id)
             else:
-                mute_list(message.chat.id)
+                bot.send_message(chat_id, 'Недостаточно прав')
         else:
-            username = list[1]
-            if cmd == 'mute':
-                add_mute(username, message.chat.id)
+            if(len(list) < 2):
+                if cmd != 'clear' and cmd != 'mutelist':
+                    bot.send_message(chat_id, f'Впишите имя пользователя\nExample: /mute @{message.from_user.username}')
+                elif cmd == 'clear':
+                    clear_mute(chat_id)
+                else:
+                    mute_list(chat_id)
             else:
-                remove_mute(username, message.chat.id)
+                username = list[1]
+                if cmd == 'mute':
+                    add_mute(username, chat_id)
+                else:
+                    remove_mute(username, chat_id)
 
 @bot.message_handler(content_types='text')
 def check_mute(message):
     username = message.from_user.username
-    # id = message.from_user.id
-    # save_ids( username, id)
+    for i in range(len(ids)):
+        if ids[i] == message.from_user.id:
+            break
+        
+        if ids[i] == '':
+            ids[i] = message.from_user.id
+            break
+
     if '@' + username in muted:
-        bot.delete_message(message.chat.id, message.message_id)
+        bot.delete_message(chat_id, message.message_id)
 
 # @bot.message_handler(commands=['vote'])
 # def kick_vote(message):
 #     victim = message.text.split()[1]
-#     if bot.get_chat_member(message.chat.id, message.from_user.id).status == 'member' and message.from_user.username != 'girlsarethesame':
-#         bot.send_message(message.chat.id, 'Недостаточно прав')
+#     if bot.get_chat_member(chat_id, message.from_user.id).status == 'member' and message.from_user.username != 'girlsarethesame':
+#         bot.send_message(chat_id, 'Недостаточно прав')
 #     else:
-#         vote_handler()
-# @bot.message_handler(commands=['lox'])
-# def random_lox(message):
-#     bot.get_fu
-    
+#         random_lox()
 
+# @bot.message_handler(commands=['gofast'])
+# def random_user(message):
+#     choose_user()
+    
+# def choose_user():
+#     rand = chat_usernames[randint(0, len(chat_usernames) - 1)]
+#     bot.send_message(chat_id, f'@{rand} хахаха')
 
 def add_mute(username: str, chat_id: str):
     for i in range(len(muted)):
@@ -103,6 +121,10 @@ def add_mute(username: str, chat_id: str):
     
 def remove_mute(username: str, chat_id: str):
     for i in range(len(muted)):
+        if username not in muted:
+            bot.send_message(chat_id, f'Пользователь {username} не заглушен')
+            break
+
         if(muted[i]) == username:
             muted[i] = ''
             bot.send_message(chat_id, f'Пользователь {username} снова может говорить')
@@ -123,6 +145,12 @@ def mute_list(chat_id: str):
         bot.send_message(chat_id, 'Никого не заткнули :3')
     else:
         bot.send_message(chat_id, f'Список немых:\n{mess}')
+
+def isUserMuted(username: str):
+    for i in range(len(muted)):
+        if muted[i] == username:
+            return True
+    return False
 
 # def vote_handler():
 #     bot.kick_chat_member
