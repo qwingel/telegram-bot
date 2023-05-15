@@ -78,6 +78,21 @@ def mute_handler(message):
                 else:
                     remove_mute(username, chat_id)
 
+@bot.message_handler(commands=['lox'])
+def today_timeTable(message):
+    bot.send_message(chat_id, f'@{chat_usernames[randint(0, len(chat_usernames) - 1)]} лох хаха')
+
+# @bot.message_handler(commands=['votekick', 'kick'])
+# def kick_user_handler(message):
+#     if bot.get_chat_member(chat_id, message.from_user.id).status == 'member' and message.from_user.username != 'girlsarethesame':
+#         return None
+    
+#     # if message.text != 'kick':
+#     #     return None
+#     #     # start_vote_for_kick(message.reply_to_message.from_user.id)
+#     # else:
+#     bot.ban_chat_member(chat_id, message.reply_to_message.from_user.id, 60)
+
 @bot.message_handler(content_types='text')
 def check_mute(message):
     username = message.from_user.username
@@ -92,6 +107,8 @@ def check_mute(message):
     if '@' + username in muted:
         bot.delete_message(chat_id, message.message_id)
 
+
+
 # @bot.message_handler(commands=['vote'])
 # def kick_vote(message):
 #     victim = message.text.split()[1]
@@ -99,14 +116,8 @@ def check_mute(message):
 #         bot.send_message(chat_id, 'Недостаточно прав')
 #     else:
 #         random_lox()
+# def start_vote_for_kick(id: int):
 
-# @bot.message_handler(commands=['gofast'])
-# def random_user(message):
-#     choose_user()
-    
-# def choose_user():
-#     rand = chat_usernames[randint(0, len(chat_usernames) - 1)]
-#     bot.send_message(chat_id, f'@{rand} хахаха')
 
 def add_mute(username: str, chat_id: str):
     for i in range(len(muted)):
