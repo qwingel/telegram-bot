@@ -17,8 +17,6 @@ chat_usernames = ['klushka66', 'girlsarethesame', 'nxmrx3sxrrxvv', 'Klnr099', 'd
 ids = ['' for i in range(30)]
 chat_id = '-1001860613804'
 
-thisDate = str(date.today()).split('-')
-today = int(calendar.weekday(int(thisDate[0]), int(thisDate[1]), int(thisDate[2])))
 current_time = str(time.hour) + str(time.minute) + str(time.second)
 
 dayOfWeek = ("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday")
@@ -28,6 +26,8 @@ muted = ['' for i in range(30)]
 
 @bot.message_handler(commands=['today'])
 def today_timeTable(message):
+    thisDate = str(date.today()).split('-')
+    today = int(calendar.weekday(int(thisDate[0]), int(thisDate[1]), int(thisDate[2])))
     mess = '' 
     if today == 6:
         bot.send_message(chat_id, 'Отдохни, крошка =3')
@@ -87,10 +87,10 @@ def today_timeTable(message):
 #     if bot.get_chat_member(chat_id, message.from_user.id).status == 'member' and message.from_user.username != 'girlsarethesame':
 #         return None
     
-#     # if message.text != 'kick':
-#     #     return None
-#     #     # start_vote_for_kick(message.reply_to_message.from_user.id)
-#     # else:
+# #     # if message.text != 'kick':
+# #     #     return None
+# #     #     # start_vote_for_kick(message.reply_to_message.from_user.id)
+# #     # else:
 #     bot.ban_chat_member(chat_id, message.reply_to_message.from_user.id, 60)
 
 @bot.message_handler(content_types='text')
