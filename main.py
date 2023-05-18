@@ -12,7 +12,7 @@ bot = telebot.TeleBot('6232931993:AAG-fax5xiFD0HSiNn59S2C8Z1pSr9hGLx0')
 
 isVoting = False
 chat_usernames = ['klushka66', 'girlsarethesame', 'nxmrx3sxrrxvv', 'Klnr099', 'dasha_chernykh0',
-                   'AAKotelmakh', 'imready2die', 'sonechko_Q', 'alexqqe', 'thevosim', 'huevei']
+                   'AAKotelmakh', 'imready2die', 'sonechko_Q', 'alexqqe', 'thevosim', 'huevei','georgegeorgev123123']
 
 ids = ['' for i in range(30)]
 chat_id = '-1001860613804'
@@ -79,7 +79,7 @@ def mute_handler(message):
                     remove_mute(username, chat_id)
 
 @bot.message_handler(commands=['lox'])
-def today_timeTable(message):
+def random_lox(message):
     bot.send_message(chat_id, f'@{chat_usernames[randint(0, len(chat_usernames) - 1)]} лох хаха')
 
 # @bot.message_handler(commands=['votekick', 'kick'])
