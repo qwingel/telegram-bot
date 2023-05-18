@@ -35,7 +35,6 @@ def today_timeTable(message):
             if not get_user_lessons(dayOfWeek[today])[i]:
                 break
             mess += '-' + get_user_lessons(dayOfWeek[today])[i] + '\n'
-        print(chat_id)
         bot.send_message(chat_id, f'<b>[{rus_dayOfWeek[today]}]</b> \n\n' + mess + f'\n<b>[{rus_dayOfWeek[today]}]</b>', parse_mode='html')
 
 @bot.message_handler(commands=['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'])
@@ -59,7 +58,7 @@ def mute_handler(message):
     if not isUserMuted(message.from_user.username):
         if bot.get_chat_member(chat_id, message.from_user.id).status == 'member' and message.from_user.username != 'girlsarethesame':
             if cmd == 'mutelist':
-                mute_list(chat_id)
+                mute_list()
             else:
                 bot.send_message(chat_id, 'Недостаточно прав')
         else:
@@ -67,15 +66,15 @@ def mute_handler(message):
                 if cmd != 'clear' and cmd != 'mutelist':
                     bot.send_message(chat_id, f'Впишите имя пользователя\nExample: /mute @{message.from_user.username}')
                 elif cmd == 'clear':
-                    clear_mute(chat_id)
+                    clear_mute()
                 else:
-                    mute_list(chat_id)
+                    mute_list()
             else:
                 username = list[1]
                 if cmd == 'mute':
-                    add_mute(username, chat_id)
+                    add_mute(username)
                 else:
-                    remove_mute(username, chat_id)
+                    remove_mute(username)
 
 @bot.message_handler(commands=['lox'])
 def random_lox(message):
@@ -171,16 +170,17 @@ def good_morning():
     today_timeTable()
 
 def good_night():
-    bot.send_message(chat_id, 'Пора спать, зайчики.\n Всем сладких снов)')
+    bot.send_message(chat_id, 'Пора спать, зайчики.\nВсем сладких снов)')
 
 def main():
     schedule.every().day.at('06:00').do(good_morning)
     schedule.every().day.at('23:30').do(good_night)
 
+    bot.polling(none_stop=True)
+
     while True:
         schedule.run_pending()
-        
-    bot.polling(none_stop=True)
+
 
 if __name__ == '__main__':
     main()
