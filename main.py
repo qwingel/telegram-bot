@@ -96,6 +96,9 @@ def random_lox(message):
 @bot.message_handler(content_types='text')
 def check_mute(message):
     username = message.from_user.username
+    if '@' + username in muted:
+        bot.delete_message(chat_id, message.message_id)
+
     for i in range(len(ids)):
         if ids[i] == message.from_user.id:
             break
@@ -103,9 +106,6 @@ def check_mute(message):
         if ids[i] == '':
             ids[i] = message.from_user.id
             break
-
-    if '@' + username in muted:
-        bot.delete_message(chat_id, message.message_id)
 
 
 
