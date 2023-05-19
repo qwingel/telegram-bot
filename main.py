@@ -13,7 +13,12 @@ bot = telebot.TeleBot('6232931993:AAG-fax5xiFD0HSiNn59S2C8Z1pSr9hGLx0')
 
 isVoting = False
 chat_usernames = ['klushka66', 'girlsarethesame', 'nxmrx3sxrrxvv', 'Klnr099', 'dasha_chernykh0',
-                   'AAKotelmakh', 'imready2die', 'sonechko_Q', 'alexqqe', 'thevosim', 'huevei','georgegeorgev123123']
+                   'AAKotelmakh', 'imready2die', 'sonechko_Q', 'alexqqe', 'thevosim', 'huevei', 'georgegeorgev123123']
+
+chat_elite = ['girlsarethesame', 'dasha_chernykh0', 'AAKotelmakh', 'sonechko_Q']
+all = ''
+for i in range(len(chat_usernames)):
+    all += '@' + chat_usernames[i] + ' '
 
 ids = ['' for i in range(30)]
 chat_id = '-1001860613804'
@@ -56,12 +61,10 @@ def mute_handler(message):
     cmd = list[0]
     
     if not isUserMuted(message.from_user.username):
-        if bot.get_chat_member(chat_id, message.from_user.id).status == 'member' and message.from_user.username != 'girlsarethesame':
-            if cmd == 'mutelist':
-                mute_list()
-            else:
-                bot.send_message(chat_id, 'Недостаточно прав')
-        else:
+        if cmd == 'mutelist':
+            mute_list()
+
+        if message.from_user.username in chat_elite:
             if(len(list) < 2):
                 if cmd != 'clear' and cmd != 'mutelist':
                     bot.send_message(chat_id, f'Впишите имя пользователя\nExample: /mute @{message.from_user.username}')
@@ -80,16 +83,16 @@ def mute_handler(message):
 def random_lox(message):
     bot.send_message(chat_id, f'@{chat_usernames[randint(0, len(chat_usernames) - 1)]} лох хаха')
 
-# @bot.message_handler(commands=['votekick', 'kick'])
-# def kick_user_handler(message):
-#     if bot.get_chat_member(chat_id, message.from_user.id).status == 'member' and message.from_user.username != 'girlsarethesame':
-#         return None
-    
-# #     # if message.text != 'kick':
-# #     #     return None
-# #     #     # start_vote_for_kick(message.reply_to_message.from_user.id)
-# #     # else:
-#     bot.ban_chat_member(chat_id, message.reply_to_message.from_user.id, 60)
+@bot.message_handler(commands=['not', 'notification'])
+def create_not(message):
+    if message.from_user.username in chat_elite:
+        list = message.text[1:].split()
+        not_time = list[1]
+        not_text = ''
+        for i in range(2, len(list)):
+            not_text += list[i]+ ' '
+
+        schedule.every().day.at(not_time).do(notification_text, message=not_text)
 
 @bot.message_handler(content_types='text')
 def check_mute(message):
@@ -104,17 +107,6 @@ def check_mute(message):
         if ids[i] == '':
             ids[i] = message.from_user.id
             break
-
-
-
-# @bot.message_handler(commands=['vote'])
-# def kick_vote(message):
-#     victim = message.text.split()[1]
-#     if bot.get_chat_member(chat_id, message.from_user.id).status == 'member' and message.from_user.username != 'girlsarethesame':
-#         bot.send_message(chat_id, 'Недостаточно прав')
-#     else:
-#         random_lox()
-# def start_vote_for_kick(id: int):
 
 def schedule_checker():
     while True:
@@ -171,6 +163,10 @@ def good_morning():
 
 def good_night():
     bot.send_message(chat_id, 'Пора спать, зайчики.\nВсем сладких снов)')
+
+def notification_text(message):
+    bot.send_message(chat_id, all + '\n' + '\n' + message)
+    return schedule.CancelJob
 
 def do_schedule():
     schedule.every().day.at('06:00').do(good_morning)
