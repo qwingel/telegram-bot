@@ -166,20 +166,24 @@ def isUserMuted(username: str):
     return False
 
 def good_morning():
-    bot.send_message(chat_id, 'Доброе утро, котятки :3')
-    today_timeTable()
+    bot.send_message(chat_id, 'Доброе утрок котятки :3\nВсем хорошего дня и потрясающего настроения!')
+    today_timeTable('123')
 
 def good_night():
     bot.send_message(chat_id, 'Пора спать, зайчики.\nВсем сладких снов)')
 
-def main():
+def do_schedule():
     schedule.every().day.at('06:00').do(good_morning)
     schedule.every().day.at('23:30').do(good_night)
 
-    bot.polling(none_stop=True)
-
     while True:
         schedule.run_pending()
+
+def main():
+    thread = Thread(target=do_schedule)
+    thread.start()
+
+    bot.polling(none_stop=True)
 
 
 if __name__ == '__main__':
