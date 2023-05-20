@@ -34,7 +34,7 @@ def today_timeTable(message):
     today = int(calendar.weekday(int(thisDate[0]), int(thisDate[1]), int(thisDate[2])))
     mess = '' 
     if today == 6:
-        bot.send_message(chat_id, 'Отдохни, крошка =3')
+        bot.send_message(chat_id, 'Выхадной!')
     else:
         for i in range(1, len(get_user_lessons(dayOfWeek[today]))):
             if not get_user_lessons(dayOfWeek[today])[i]:
@@ -158,7 +158,7 @@ def isUserMuted(username: str):
     return False
 
 def good_morning():
-    bot.send_message(chat_id, 'Доброе утрок котятки :3\nВсем хорошего дня и потрясающего настроения!')
+    bot.send_message(chat_id, 'Доброе утро, котятки :3\nВсем хорошего дня и потрясающего настроения!')
     today_timeTable('123')
 
 def good_night():
